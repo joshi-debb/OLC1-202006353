@@ -1,0 +1,451 @@
+package pkgLibs;
+import java_cup.runtime.Symbol;
+import java.util.LinkedList;
+
+parser code
+{:
+    //golang
+    public String golang="";
+    public String pseudoG = "";
+
+
+
+    public String expG = "";
+    
+    public String printG = "";
+    public String printnlG = "";
+    public String metodG = "";
+    public String loopG = "";
+
+
+
+    public int cont = 0;
+    public LinkedList<Errors> SyntaxErrors = new LinkedList<Errors>();
+    public String resultado ="";
+
+    public void syntax_Errors(Symbol s){
+        System.out.println("Errors R de sintaxis: "+ s.value +" Linea "+(s.left+1)+" columna "+(s.right+1) );
+        try {
+            Errors esR = new Errors(s.value.toString(), s.left + 1, s.right + 1, "Errors Sintactico Recuperable", "Token o Simbolo no esperado");
+            SyntaxErrors.add(esR);
+        } catch (Exception ex) {
+            Errors esR = new Errors("null", s.left + 1, s.right + 1, "Errors Sintactico Recuperable", "Token o Simbolo no esperado");
+            SyntaxErrors.add(esR);
+        }
+    }
+
+    public void unrecovered_syntax_Errors(Symbol s) throws java.lang.Exception{ 
+        System.out.println("Errors NR de sintaxis: "+ s.value +" Linea "+(s.left+1)+" columna "+(s.right+1) );
+        try {
+            Errors esNR = new Errors(s.value.toString(), s.left + 1, s.right + 1, "Errors Sintactico No Recuperable", "Token o Simbolo no esperado");
+            SyntaxErrors.add(esNR);
+        } catch (Exception ex) { 
+            Errors esNR = new Errors("null", s.left + 1, s.right + 1, "Errors Sintactico No Recuperable", "Token o Simbolo no esperado");
+            SyntaxErrors.add(esNR);
+        }
+    }
+
+        String dEnteros(Object signo, String num){
+        String aux = "";
+        aux += " int = "; 
+        for(int i = 1; i <= cont; i++){
+            if(signo == null){aux += " "+num;
+            }else{ aux += " "+signo+num; }
+            if(i != cont){ aux += ","; }
+        } aux += "\n"; cont = 0;
+        return (aux);
+    }
+
+    String dFlotantes(Object signo, String num){
+        String aux = "";
+        aux += " float64 = "; 
+        for(int i = 1; i <= cont; i++){
+            if(signo == null){aux += " "+num;
+            }else{ aux += " "+signo+num; }
+            if(i != cont){ aux += ","; }
+        } aux += "\n"; cont = 0;
+        return (aux);
+    }
+
+    String dCadenas(String cadena){
+        String aux = "";
+        aux += " string = "; 
+        for(int i = 1; i <= cont; i++){
+            aux += " "+cadena;
+            if(i != cont){ aux += ","; }
+        } aux += "\n"; cont = 0;
+        return (aux);
+    }
+
+    String dBoolT(){
+        String aux = "";
+        aux += " bool = "; 
+        for(int i = 1; i <= cont; i++){
+            aux += " "+"true";
+            if(i != cont){ aux += ","; }
+        } aux += "\n"; cont = 0;
+        return (aux);
+    }
+
+    String dBoolF(){
+        String aux = "";
+        aux += " bool = "; 
+        for(int i = 1; i <= cont; i++){
+            aux += " "+"false";
+            if(i != cont){ aux += ","; }
+        } aux += "\n"; cont = 0;
+        return (aux);
+    }
+
+    String dChars(String chars){
+        String aux = "";
+        aux += " byte = "; 
+        for(int i = 1; i <= cont; i++){
+            aux += " "+chars;
+            if(i != cont){ aux += ","; }
+        } aux += "\n"; cont = 0;
+        return (aux);
+    }
+
+    String dCharAscii(String charse){
+        String aux = "";
+        aux += "  string = "; 
+        for(int i = 1; i <= cont; i++){
+            aux += " "+"string"+charse;
+            if(i != cont){ aux += ","; }
+        } aux += "\n"; cont = 0;
+        return (aux);
+    }
+
+    String dOpracion(String tipo, String exp){
+
+        String aux = "";
+
+        switch (tipo.toLowerCase()) {
+            case "boolean":
+                aux += " bool = "; 
+                for(int i = 1; i <= cont; i++){
+                    aux += " "+exp;
+                    if(i != cont){ aux += ","; }
+                } aux += "\n"; cont = 0;
+                break;
+            case "numero":
+                aux += " float64 = "; 
+                for(int i = 1; i <= cont; i++){
+                    aux += " "+exp;
+                    if(i != cont){ aux += ","; }
+                } aux += "\n"; cont = 0;
+                break;
+        }
+        return (aux);
+    }
+
+    String aGeneral(String exp){
+        String aux = "";
+        aux += "  =  "; 
+        for(int i = 1; i <= cont; i++){
+        aux += " "+exp;
+        if(i != cont){ aux += ","; }
+        } aux += "\n"; cont = 0;
+        return (aux);
+    }
+
+    String relacional(String exp, String operador, String exp2){
+        String aux = "";
+        aux += " " +exp;
+
+        switch (operador.toLowerCase()) {
+            case "mayor":
+                aux += " > ";
+                break;
+            case "menor":
+                aux += " < ";
+                break;
+            case "mayor_o_igual":
+                aux += " >= ";
+                break;
+            case "menor_o_igual":
+                aux += " <= ";
+                break;
+            case "es_igual":
+                aux += " == ";
+                break;  
+            case "es_diferente":
+                aux += " != ";
+                break;  
+        }
+
+        aux += " "+exp2;
+        return (aux);
+    }
+
+    String pot1(String entero, String exp){
+        String aux = "";
+        String valores = String.format("%s , %s", entero, exp);
+        aux += " "+"math.Pow(" +  valores +")";
+        return(aux);
+    }
+
+    String pot2(String entero, String Pexp, String exp){
+        String aux = "";
+        String valores = String.format("%s , %s", entero, Pexp);
+        aux += " "+"math.Pow(" +  valores +") " + "+"+exp ;
+        return(aux);
+    }
+
+    String prt(String dato){
+        String aux = "";
+        aux += "fmt.Print(" + dato + ")";
+        return(aux);
+    }
+
+    String prtnl(String dato){
+        String aux = "";
+        aux += "fmt.Println(" + dato + ")";
+        return(aux);
+    }
+
+    String cicloif(String dato1, String oper, String dato2){
+        String aux = "";
+
+        aux += "\t" + "if " + dato1 + " " + oper + " " + dato2 " {";
+
+        aux += "}";
+
+        return aux;
+    }
+:}
+
+action code
+{: :}
+
+terminal TIPO, ENTERO, FLOTANTE, CADENA, BOOLEAN, CARACTER, CHARACTER, ID, MAS,
+    MENOS, POR, DIV, MOD, POT, MAYOR, MENOR, MAYOROIGUAL, MENOROIGUAL, ESIGUAL,
+    ESDIFERENTE, OR, AND, NOT, INICIO, FIN, INGRESAR, COMO, CONVALOR, SI, ENTONCES,
+    DELOCONTRARIO, OSI, FINSI, SEGUN, FINSEGUN, PARA, HASTA, HACER, CONINCREMENTAL,
+    FINPARA, MIENTRAS, FINMIENTRAS, REPETIR, HASTAQUE, RETORNAR, METODO, CONPARAMETROS,
+    FINMETODO, FUNCION, FINFUNCION, EJECUTAR, IMPRIMIR, IMPRIMIRNL, COMA, PUNTO, PYC,
+    ASIGNAR, PARABRE, PARCIERRA, INTABRE, INTCIERRA, COMENTARIO, COMENTARIOS, SIMBOLO,
+    TRUE, FALSE, CORABRE, CORCIERRA, EXP, EXPPOT, EXPR;
+
+
+non terminal inicio, pseudo, declaration, asignation,ciclos, 
+    coments, prints, V, A, OPB, OPR, retorn, ejecutar, contenido, 
+    OPRS, TYPES, type, signo, sentencia, sentif, switch, ciclofor, ciclowhle, cicloDowhile;
+
+start with inicio;
+
+inicio::= INICIO pseudo {: 
+
+    golang += "\npackage main" + "\nimport(" + "\n\t" + '"' + "fmt" + '"' + "\n\t" + '"' + "math" + '"' + "\n)";
+    golang += "\nfunc main(){" + "\n"+ pseudoG + "\n" + "}";
+    System.out.println(golang); 
+    
+    :} FIN ;
+
+//GRAMATICA PRINCIPAL
+// pseudo::= pseudo declaration
+//         | declaration
+//         | pseudo asignation
+//         | asignation
+//         | pseudo coments
+//         | coments
+//         | pseudo prints 
+//         | prints
+// ;
+
+//GRAMATICA PRINCIPAL
+pseudo::= pseudo sentencia
+        | sentencia
+;
+
+
+
+
+//IMPRESIONES
+prints::= IMPRIMIR type:a PYC
+        {: pseudoG += "\n\t" + prt(String.valueOf(a)); :}
+        | IMPRIMIRNL type:a PYC
+        {: pseudoG += "\n\t" + prtnl(String.valueOf(a)); :}
+;
+
+//COMENTARIOS
+coments::= COMENTARIO: a
+        {: pseudoG += "\t" + String.valueOf(a) +"\n"; :}   
+        | COMENTARIOS: a
+        {: pseudoG += "\t" + String.valueOf(a) +"\n"; :}  
+;
+
+//ASIGNACION
+asignation::= A ASIGNAR ENTERO:a PYC
+    {: pseudoG += aGeneral(String.valueOf(a)); :}
+    | A ASIGNAR FLOTANTE:a PYC
+    {: pseudoG += aGeneral(String.valueOf(a)); :}
+    | A ASIGNAR CADENA:a PYC
+    {: pseudoG += aGeneral(String.valueOf(a)); :}
+    | A ASIGNAR CARACTER:a PYC
+    {: pseudoG += aGeneral(String.valueOf(a)); :}
+    | A ASIGNAR CHARACTER:a PYC
+    {: pseudoG += aGeneral(String.valueOf(a)); :}
+    | A ASIGNAR BOOLEAN:a PYC
+    {: pseudoG += aGeneral(String.valueOf(a)); :}
+
+;
+
+//DECLARACION
+declaration::= 
+    INGRESAR V COMO TIPO CONVALOR ENTERO:a PYC
+        {: pseudoG += dEnteros(null, String.valueOf(a)); :}
+    |INGRESAR V COMO TIPO CONVALOR MENOS:a ENTERO:b PYC
+        {: pseudoG += dEnteros(String.valueOf(a),String.valueOf(b)); :}
+    |INGRESAR  V COMO TIPO CONVALOR FLOTANTE:a PYC
+        {: pseudoG += dFlotantes(null, String.valueOf(a)); :} 
+    |INGRESAR V COMO TIPO CONVALOR MENOS:a FLOTANTE:b PYC
+        {: pseudoG += dFlotantes(String.valueOf(a),String.valueOf(b)); :} 
+    |INGRESAR V COMO TIPO CONVALOR CADENA:a PYC
+        {: pseudoG += dCadenas(String.valueOf(a)); :} 
+    |INGRESAR V COMO TIPO CONVALOR TRUE PYC
+        {: pseudoG += dBoolT(); :} 
+    |INGRESAR V COMO TIPO CONVALOR FALSE PYC
+        {: pseudoG += dBoolF(); :} 
+    |INGRESAR V COMO TIPO CONVALOR CARACTER:a PYC
+        {: pseudoG += dChars(String.valueOf(a)); :}
+    |INGRESAR V COMO TIPO CONVALOR CHARACTER:a PYC 
+        {:  String aux = String.valueOf(a);
+            String aux2 = aux.replace("'${", "(").replace("}'",")");
+            pseudoG += dCharAscii(String.valueOf(aux2)); :}
+    |INGRESAR V COMO TIPO:a CONVALOR OPB:b PYC
+        {: pseudoG += dOpracion(String.valueOf(a),String.valueOf(b)); :}
+    |INGRESAR V COMO TIPO:a CONVALOR OPR:b PYC
+        {: pseudoG += dOpracion(String.valueOf(a),String.valueOf(b)); :}
+    ;
+
+//OPERACION RELACIONAL
+OPR::= EXPR:a
+    {: RESULT = String.valueOf(a); :}
+    | TYPES:a OPRS:b TYPES:c
+    {: RESULT = relacional(String.valueOf(a), String.valueOf(b), String.valueOf(c)); :}
+;
+
+ciclos::= ciclofor
+    | ciclowhle
+    | cicloDowhile
+;
+
+sentencia::= sentif:a
+    {: pseudoG += "\n\t" + prt(String.valueOf(a)); :}
+    | switch:a
+    {: pseudoG += "\n\t" + prt(String.valueOf(a)); :}
+;
+
+sentif::= SI TYPES:a OPRS:b TYPES:c ENTONCES contenido FINSI
+     {: pseudoG += cicloif(String.valueOf(a),String.valueOf(b),String.valueOf(c)); :}
+;
+
+contenido::=prints
+        | coments
+        | declaration
+        | asignation
+        | ciclos
+;
+
+
+
+//OPERACION BASICA
+OPB ::= EXP:a
+    {: RESULT = String.valueOf(a); :}
+    | PARABRE:a EXP:b PARCIERRA:c
+    {: RESULT = String.valueOf(String.valueOf(a) + String.valueOf(b) + String.valueOf(c)); :}  
+    | ID:a signo:b ID:c
+    {: RESULT = String.valueOf(String.valueOf(a) + String.valueOf(b) + String.valueOf(c)); :}
+    | ENTERO:a POT EXPPOT:c
+    {:  String aux = String.valueOf(c);
+        String aux2 = aux.replace("[","(").replace("]",")");
+        RESULT = pot1(String.valueOf(a), String.valueOf(aux2)); :}
+    | ENTERO:a POT EXPPOT:b MAS EXP:c
+    {:  String aux = String.valueOf(b);
+        String aux2 = aux.replace("[","(").replace("]",")");
+        RESULT = pot2(String.valueOf(a), String.valueOf(aux2), String.valueOf(c)); :}    
+    | PARABRE ENTERO:a POT EXPPOT:b PARCIERRA MAS EXP:c
+    {:  String aux = String.valueOf(b);
+        String aux2 = aux.replace("[","(").replace("]",")");
+        RESULT = pot2(String.valueOf(a), String.valueOf(aux2), String.valueOf(c)); :}    
+    | FLOTANTE:a POT EXPPOT:b MAS EXP:c
+    {:  String aux = String.valueOf(b);
+        String aux2 = aux.replace("[","(").replace("]",")");
+        RESULT = pot2(String.valueOf(a), String.valueOf(aux2), String.valueOf(c)); :}    
+    | PARABRE FLOTANTE:a POT EXPPOT:b PARCIERRA MAS EXP:c
+    {:  String aux = String.valueOf(b);
+        String aux2 = aux.replace("[","(").replace("]",")");
+        RESULT = pot2(String.valueOf(a), String.valueOf(aux2), String.valueOf(c)); :}    
+    | EXP:a MOD EXP:c  
+    {: RESULT = String.valueOf(String.valueOf(a) + " % " + String.valueOf(c)); :}  
+;
+
+//SIGNOS
+signo::= MAS:a
+    {: RESULT = String.valueOf(a); :}
+    | MENOS:a
+    {: RESULT = String.valueOf(a); :}
+    | POR:a
+    {: RESULT = String.valueOf(a); :}
+    | DIV:a
+    {: RESULT = String.valueOf(a); :}
+    | MOD:a
+    {: RESULT = String.valueOf(a); :}
+;
+
+//TIPOS DE DATOS
+TYPES::= ENTERO:a
+    {: RESULT = String.valueOf(a); :}
+    | FLOTANTE:a
+    {: RESULT = String.valueOf(a); :}
+    | ID:a
+    {: RESULT = String.valueOf(a); :}
+    | EXPR:a
+    {: RESULT = String.valueOf(a); :}
+;
+
+
+//TIPOS DE DATOS
+type::= ID:a
+    {: RESULT = String.valueOf(a); :}
+    | CADENA:a
+    {: RESULT = String.valueOf(a); :}
+    | EXPR:a
+    {: RESULT = String.valueOf(a); :}
+;
+
+//OPERADORES RELACIONALES
+OPRS::= MAYOR:a
+    {: RESULT = String.valueOf(a); :}
+    | MENOR:a
+    {: RESULT = String.valueOf(a); :}
+    | MAYOROIGUAL:a
+    {: RESULT = String.valueOf(a); :}
+    | MENOROIGUAL:a
+    {: RESULT = String.valueOf(a); :}
+    | ESIGUAL:a
+    {: RESULT = String.valueOf(a); :}
+    | ESDIFERENTE:a
+    {: RESULT = String.valueOf(a); :}
+;
+
+
+
+//NOMBRES MULTIPLES
+A::= A COMA ID:a
+    {: pseudoG += ","+a; cont += 1; :}
+    | ID:a
+    {: pseudoG += "\t"+a; cont += 1; :}    
+;
+
+//VARIABLES MULTIPLES
+V::= V COMA ID:a
+    {: pseudoG += ","+a; cont += 1; :}
+    | ID:a
+    {: pseudoG += "\t"+"var"+" "+a; cont += 1; :}    
+;
+
+
+
