@@ -1,27 +1,36 @@
 package pkgLibs;
+import pkgProject.*;
 import java_cup.runtime.Symbol;
 import java.util.LinkedList;
 
 parser code
-{:
+{:  
     //golang
     public String golang="";
     public String pseudoG = "";
-
-
-
+    public String tmp;
+    public String tmp2;
+    public String tmp3;
+    public String tmp4;
+    public String tmp5;
+    public String tmp6;
     public String expG = "";
-    
     public String printG = "";
     public String printnlG = "";
     public String metodG = "";
     public String loopG = "";
-
-
-
     public int cont = 0;
+
+
     public LinkedList<Errors> SyntaxErrors = new LinkedList<Errors>();
     public String resultado ="";
+
+    
+    public static Nodo raiz;
+    
+    public Nodo getRaiz(){
+        return raiz;
+    }
 
     public void syntax_Errors(Symbol s){
         System.out.println("Errors R de sintaxis: "+ s.value +" Linea "+(s.left+1)+" columna "+(s.right+1) );
@@ -45,8 +54,18 @@ parser code
         }
     }
 
-        String dEnteros(Object signo, String num){
+    
+
+
+
+:}
+
+action code
+{:
+
+String dEnteros(Object signo, String num, String nombres){
         String aux = "";
+        aux += nombres;
         aux += " int = "; 
         for(int i = 1; i <= cont; i++){
             if(signo == null){aux += " "+num;
@@ -56,8 +75,9 @@ parser code
         return (aux);
     }
 
-    String dFlotantes(Object signo, String num){
+    String dFlotantes(Object signo, String num, String nombres){
         String aux = "";
+        aux += nombres;
         aux += " float64 = "; 
         for(int i = 1; i <= cont; i++){
             if(signo == null){aux += " "+num;
@@ -67,8 +87,9 @@ parser code
         return (aux);
     }
 
-    String dCadenas(String cadena){
+    String dCadenas(String cadena, String nombres){
         String aux = "";
+        aux += nombres;
         aux += " string = "; 
         for(int i = 1; i <= cont; i++){
             aux += " "+cadena;
@@ -77,28 +98,9 @@ parser code
         return (aux);
     }
 
-    String dBoolT(){
+    String dChars(String chars, String nombres){
         String aux = "";
-        aux += " bool = "; 
-        for(int i = 1; i <= cont; i++){
-            aux += " "+"true";
-            if(i != cont){ aux += ","; }
-        } aux += "\n"; cont = 0;
-        return (aux);
-    }
-
-    String dBoolF(){
-        String aux = "";
-        aux += " bool = "; 
-        for(int i = 1; i <= cont; i++){
-            aux += " "+"false";
-            if(i != cont){ aux += ","; }
-        } aux += "\n"; cont = 0;
-        return (aux);
-    }
-
-    String dChars(String chars){
-        String aux = "";
+        aux += nombres;
         aux += " byte = "; 
         for(int i = 1; i <= cont; i++){
             aux += " "+chars;
@@ -107,8 +109,9 @@ parser code
         return (aux);
     }
 
-    String dCharAscii(String charse){
+    String dCharAscii(String charse,String nombres){
         String aux = "";
+        aux += nombres;
         aux += "  string = "; 
         for(int i = 1; i <= cont; i++){
             aux += " "+"string"+charse;
@@ -117,9 +120,10 @@ parser code
         return (aux);
     }
 
-    String dOpracion(String tipo, String exp){
+    String dOpracion(String tipo, String exp, String nombres){
 
         String aux = "";
+        aux += nombres;
 
         switch (tipo.toLowerCase()) {
             case "boolean":
@@ -140,9 +144,23 @@ parser code
         return (aux);
     }
 
-    String aGeneral(String exp){
+    String aGeneral(String exp, String nombres){
         String aux = "";
-        aux += "  =  "; 
+        aux += nombres;
+        aux += "  =  ";
+        switch (exp.toLowerCase()) {
+            case "verdadero":
+                for(int i = 1; i <= cont; i++){
+                aux += " "+"true";
+                if(i != cont){ aux += ","; }
+                } aux += "\n"; cont = 0;
+            case "falso":
+                for(int i = 1; i <= cont; i++){
+                aux += " "+"false";
+                if(i != cont){ aux += ","; }
+                } aux += "\n"; cont = 0;
+                return (aux);
+        }
         for(int i = 1; i <= cont; i++){
         aux += " "+exp;
         if(i != cont){ aux += ","; }
@@ -194,131 +212,364 @@ parser code
     }
 
     String prt(String dato){
-        String aux = "";
+        String aux = " ";
+        if(dato == "null"){
+            aux = " ";
+            return aux;
+        }
         aux += "fmt.Print(" + dato + ")";
         return(aux);
     }
 
     String prtnl(String dato){
-        String aux = "";
+        String aux = " ";
+        if(dato == "null"){
+            aux = " ";
+            return aux;
+        }
         aux += "fmt.Println(" + dato + ")";
         return(aux);
     }
 
-    String cicloif(String dato1, String oper, String dato2){
+    String cicloif(String dato1, String operador, String dato2, String datas){
         String aux = "";
 
-        aux += "\t" + "if " + dato1 + " " + oper + " " + dato2 " {";
+        aux += "\n\t" + "if " + dato1;
 
-        aux += "}";
+        switch (operador.toLowerCase()) {
+            case "mayor":
+                aux += " > ";
+                break;
+            case "menor":
+                aux += " < ";
+                break;
+            case "mayor_o_igual":
+                aux += " >= ";
+                break;
+            case "menor_o_igual":
+                aux += " <= ";
+                break;
+            case "es_igual":
+                aux += " == ";
+                break;  
+            case "es_diferente":
+                aux += " != ";
+                break;
+            case "and":
+                aux += " && ";
+                break;  
+            case "or":
+                aux += " || ";
+                break;
+            case "not":
+                aux += " ! ";
+                break;  
+        }
 
+        aux += dato2 + " {";
+        aux += "\t" + datas + "\n\t" + "}";
         return aux;
     }
-:}
 
-action code
-{: :}
+    String cicloif2(String dato1, String datas){
+        String aux = "";
 
-terminal TIPO, ENTERO, FLOTANTE, CADENA, BOOLEAN, CARACTER, CHARACTER, ID, MAS,
+        aux += "\n\t" + "if " + dato1;
+
+        aux += " {";
+        aux += "\t" + datas + "\n\t" + "}";
+        return aux;
+    }
+
+    String cicloif3(String dato1, String datas){
+        String aux = "";
+
+        aux += "\n\t" + "if "+ "!(" + dato1 + ")";
+
+        aux += " {";
+        aux += "\t" + datas + "\n\t" + "}";
+        return aux;
+    }
+
+    
+    String cicloif4(String dato1, String operador, String dato2, String datas){
+        String aux = "";
+
+        aux += "\n\t" + "if " + "!(" + dato1;
+
+        switch (operador.toLowerCase()) {
+            case "mayor":
+                aux += " > ";
+                break;
+            case "menor":
+                aux += " < ";
+                break;
+            case "mayor_o_igual":
+                aux += " >= ";
+                break;
+            case "menor_o_igual":
+                aux += " <= ";
+                break;
+            case "es_igual":
+                aux += " == ";
+                break;  
+            case "es_diferente":
+                aux += " != ";
+                break;
+            case "and":
+                aux += " && ";
+                break;  
+            case "or":
+                aux += " || ";
+                break;
+            case "not":
+                aux += " ! ";
+                break;  
+        }
+
+        aux += dato2 + ") {";
+        aux += "\t" + datas + "\n\t" + "}";
+        return aux;
+    }
+    
+    
+
+    String elsif(String dato1, String operador, String dato2, String datas){
+        String aux = "";
+
+        aux += "\n\t" + "}else if " + dato1; 
+    
+        switch (operador.toLowerCase()) {
+            case "mayor":
+                aux += " > ";
+                break;
+            case "menor":
+                aux += " < ";
+                break;
+            case "mayor_o_igual":
+                aux += " >= ";
+                break;
+            case "menor_o_igual":
+                aux += " <= ";
+                break;
+            case "es_igual":
+                aux += " == ";
+                break;  
+            case "es_diferente":
+                aux += " != ";
+                break;
+            case "and":
+                aux += " && ";
+                break;  
+            case "or":
+                aux += " || ";
+                break;
+            case "not":
+                aux += " ! ";
+                break;  
+        }
+
+        aux += dato2 + " {";
+        aux += "\t" + datas + "\n\t";
+        return aux;
+    }
+
+    String elses(String dato){
+        String aux = "";
+        aux += "\n\t" + "}else {"+"\n";
+        aux += "\t" + dato;
+        aux += "\n";
+        return aux;
+    }
+
+    String concat(String dato1, String dato2, String dato3){
+        String aux = "";
+        if(dato3 == "null"){
+            aux += "\n\t" + dato1 + " " + dato2 + " ";
+            return aux;
+        }
+        aux += "\n\t" + dato1 + " " + dato2 + " " + dato3 + " ";
+        return aux;
+    }
+
+    
+    String switche(String dato1, String datas){
+        String aux = "";
+
+        aux += "\n\t" + "switch " + dato1 + "{";
+        aux += "\t" + datas + "\n\t" + "}";
+        return aux;
+    }
+
+
+    String cases(String dato1, String datas){
+        String aux = "";
+        aux += "\n\t\t" + "case " + dato1 + ": \n\t";
+        aux += "\t" + datas + "\n";
+        return aux;
+    }
+
+    String deflt(String datas){
+        String aux = "";
+        aux += "\n\t\t" + "default:";
+        aux += "\t" + datas + "\n";
+        return aux;
+    }
+
+    String cicloFor(String dato1,String dato2,String exp,String datas,String salto){
+        String aux = "";
+        if(salto == "null"){
+            aux += "\n\t" + "for " + dato1 + " := " + dato2 + "; " + exp + " { \n";
+            aux += "\t" + datas + "\n";
+            aux += "\n\t }";
+            return aux;
+        }else{
+            aux += "\n\t" + "for " + dato1 + " := " + dato2 + "; " + exp + "; " + salto +" { \n";
+            aux += "\t" + datas + "\n";
+            aux += "\n\t }";
+            return aux;
+        }
+    }
+
+    String cicloWhile(String dato1,String operador,String dato2,String datas){
+        String aux = "";
+        aux += "\n\t" + "for true { ";
+
+        aux += "\n\t\t" + " if !("+ dato1;
+        
+                switch (operador.toLowerCase()) {
+            case "mayor":
+                aux += " > ";
+                break;
+            case "menor":
+                aux += " < ";
+                break;
+            case "mayor_o_igual":
+                aux += " >= ";
+                break;
+            case "menor_o_igual":
+                aux += " <= ";
+                break;
+            case "es_igual":
+                aux += " == ";
+                break;  
+            case "es_diferente":
+                aux += " != ";
+                break;
+            case "and":
+                aux += " && ";
+                break;  
+            case "or":
+                aux += " || ";
+                break;
+            case "not":
+                aux += " ! ";
+                break;  
+        }
+
+        aux += dato2 + ") { ";
+        aux += "\n\t break";
+        aux += "\n\t }";
+
+        aux += "\n\t\t" + datas + "\n }";
+        return aux;
+    }
+
+
+    :}
+
+terminal TIPO, ENTERO, FLOTANTE, CADENA, BOOLEAN, CARACTER, CHARACTER, ID, MAS, EXPWH,
     MENOS, POR, DIV, MOD, POT, MAYOR, MENOR, MAYOROIGUAL, MENOROIGUAL, ESIGUAL,
     ESDIFERENTE, OR, AND, NOT, INICIO, FIN, INGRESAR, COMO, CONVALOR, SI, ENTONCES,
     DELOCONTRARIO, OSI, FINSI, SEGUN, FINSEGUN, PARA, HASTA, HACER, CONINCREMENTAL,
     FINPARA, MIENTRAS, FINMIENTRAS, REPETIR, HASTAQUE, RETORNAR, METODO, CONPARAMETROS,
     FINMETODO, FUNCION, FINFUNCION, EJECUTAR, IMPRIMIR, IMPRIMIRNL, COMA, PUNTO, PYC,
     ASIGNAR, PARABRE, PARCIERRA, INTABRE, INTCIERRA, COMENTARIO, COMENTARIOS, SIMBOLO,
-    TRUE, FALSE, CORABRE, CORCIERRA, EXP, EXPPOT, EXPR;
+    TRUE, FALSE, CORABRE, CORCIERRA, EXP, EXPPOT, EXPR, EXPBOOL, EXPSC, ORCF;
 
 
-non terminal inicio, pseudo, declaration, asignation,ciclos, 
-    coments, prints, V, A, OPB, OPR, retorn, ejecutar, contenido, 
-    OPRS, TYPES, type, signo, sentencia, sentif, switch, ciclofor, ciclowhle, cicloDowhile;
+non terminal inicio, Nodo, pseudo, declaration, asignation,ciclos, opes, ntocs, ntoncs, contrario,osi, opciones,
+    coments, prints, V, A, OPB, OPR, retorn, ejecutar, contenido, printsG, conr_r, conntdos, casos, swithces, defolt, 
+    OPRS, TYPES, type, TYP, signo, sentencia, sentif, switch, opestrs, basico, ciclofor, cont_r, conntennido, ciclowhile, cicloDowhile;
 
 start with inicio;
 
-inicio::= INICIO pseudo {: 
+inicio::= INICIO pseudo {:
 
     golang += "\npackage main" + "\nimport(" + "\n\t" + '"' + "fmt" + '"' + "\n\t" + '"' + "math" + '"' + "\n)";
     golang += "\nfunc main(){" + "\n"+ pseudoG + "\n" + "}";
-    System.out.println(golang); 
+    String aux = golang.replace("null"," ");
+    System.out.println(aux); 
     
     :} FIN ;
 
-//GRAMATICA PRINCIPAL
-// pseudo::= pseudo declaration
-//         | declaration
-//         | pseudo asignation
-//         | asignation
-//         | pseudo coments
-//         | coments
-//         | pseudo prints 
-//         | prints
-// ;
+pseudo::= pseudo opciones
+        | opciones
+;
 
 //GRAMATICA PRINCIPAL
-pseudo::= pseudo sentencia
-        | sentencia
+opciones::= declaration:a
+    {: pseudoG += String.valueOf(a);  :}
+    | asignation:a
+    {: pseudoG += String.valueOf(a); :}
+    | coments:a
+    {: pseudoG += String.valueOf(a); :}
+    | prints:a
+    {: pseudoG += String.valueOf(a); :}
+    | retorn:a
+    {: pseudoG += String.valueOf(a); :}
+    | sentencia:a
+    {: pseudoG += String.valueOf(a); :}
+    | ciclos:a
+    {: pseudoG += String.valueOf(a); :}
 ;
 
 
+
+//DECLARACION
+basico::= declaration:a
+    {: RESULT += String.valueOf(a); :}
+    | asignation:a
+    {: RESULT += String.valueOf(a); :}
+;
+
+
+//SETENCIAS IF Y SWITHC
+sentencia::= sentif:a
+    {: RESULT += String.valueOf(a); :}
+    | switch:a
+    {: RESULT += String.valueOf(a); :}
+;
+
+
+//CILOS FOR WHILE Y DOWHILE
+ciclos::= ciclofor:a
+    {: RESULT += String.valueOf(a); :}
+    | cicloDowhile:a
+    {: RESULT += String.valueOf(a); :}
+    | ciclowhile:a
+    {: RESULT += String.valueOf(a); :}
+;
 
 
 //IMPRESIONES
 prints::= IMPRIMIR type:a PYC
-        {: pseudoG += "\n\t" + prt(String.valueOf(a)); :}
-        | IMPRIMIRNL type:a PYC
-        {: pseudoG += "\n\t" + prtnl(String.valueOf(a)); :}
+    {: RESULT += "\n\t" + prt(String.valueOf(a)); :}
+    | IMPRIMIRNL type:a PYC
+    {: RESULT += "\n\t" + prtnl(String.valueOf(a)); :}
 ;
 
 //COMENTARIOS
 coments::= COMENTARIO: a
-        {: pseudoG += "\t" + String.valueOf(a) +"\n"; :}   
-        | COMENTARIOS: a
-        {: pseudoG += "\t" + String.valueOf(a) +"\n"; :}  
+    {: RESULT += "\t" + String.valueOf(a) +"\n"; :}   
+    | COMENTARIOS: a
+    {: RESULT += "\t" + String.valueOf(a) +"\n"; :}  
 ;
 
-//ASIGNACION
-asignation::= A ASIGNAR ENTERO:a PYC
-    {: pseudoG += aGeneral(String.valueOf(a)); :}
-    | A ASIGNAR FLOTANTE:a PYC
-    {: pseudoG += aGeneral(String.valueOf(a)); :}
-    | A ASIGNAR CADENA:a PYC
-    {: pseudoG += aGeneral(String.valueOf(a)); :}
-    | A ASIGNAR CARACTER:a PYC
-    {: pseudoG += aGeneral(String.valueOf(a)); :}
-    | A ASIGNAR CHARACTER:a PYC
-    {: pseudoG += aGeneral(String.valueOf(a)); :}
-    | A ASIGNAR BOOLEAN:a PYC
-    {: pseudoG += aGeneral(String.valueOf(a)); :}
-
+//RETORNOS
+retorn::= RETORNAR TYPES:a PYC
+    {: RESULT += "\t" + String.valueOf(a) +"\n"; :}  
 ;
-
-//DECLARACION
-declaration::= 
-    INGRESAR V COMO TIPO CONVALOR ENTERO:a PYC
-        {: pseudoG += dEnteros(null, String.valueOf(a)); :}
-    |INGRESAR V COMO TIPO CONVALOR MENOS:a ENTERO:b PYC
-        {: pseudoG += dEnteros(String.valueOf(a),String.valueOf(b)); :}
-    |INGRESAR  V COMO TIPO CONVALOR FLOTANTE:a PYC
-        {: pseudoG += dFlotantes(null, String.valueOf(a)); :} 
-    |INGRESAR V COMO TIPO CONVALOR MENOS:a FLOTANTE:b PYC
-        {: pseudoG += dFlotantes(String.valueOf(a),String.valueOf(b)); :} 
-    |INGRESAR V COMO TIPO CONVALOR CADENA:a PYC
-        {: pseudoG += dCadenas(String.valueOf(a)); :} 
-    |INGRESAR V COMO TIPO CONVALOR TRUE PYC
-        {: pseudoG += dBoolT(); :} 
-    |INGRESAR V COMO TIPO CONVALOR FALSE PYC
-        {: pseudoG += dBoolF(); :} 
-    |INGRESAR V COMO TIPO CONVALOR CARACTER:a PYC
-        {: pseudoG += dChars(String.valueOf(a)); :}
-    |INGRESAR V COMO TIPO CONVALOR CHARACTER:a PYC 
-        {:  String aux = String.valueOf(a);
-            String aux2 = aux.replace("'${", "(").replace("}'",")");
-            pseudoG += dCharAscii(String.valueOf(aux2)); :}
-    |INGRESAR V COMO TIPO:a CONVALOR OPB:b PYC
-        {: pseudoG += dOpracion(String.valueOf(a),String.valueOf(b)); :}
-    |INGRESAR V COMO TIPO:a CONVALOR OPR:b PYC
-        {: pseudoG += dOpracion(String.valueOf(a),String.valueOf(b)); :}
-    ;
 
 //OPERACION RELACIONAL
 OPR::= EXPR:a
@@ -327,29 +578,136 @@ OPR::= EXPR:a
     {: RESULT = relacional(String.valueOf(a), String.valueOf(b), String.valueOf(c)); :}
 ;
 
-ciclos::= ciclofor
-    | ciclowhle
-    | cicloDowhile
+
+//CICLO PARA
+ciclofor::= PARA TYP:a ASIGNAR TYP:b HASTA EXPR:c HACER conntdos:d FINPARA
+    {: RESULT = cicloFor(String.valueOf(a),String.valueOf(b),String.valueOf(c),String.valueOf(d), "null"); :}
+    | PARA TYP:a ASIGNAR TYP:b HASTA EXPR:c CONINCREMENTAL TYP:e HACER conntdos:d FINPARA
+    {: RESULT = cicloFor(String.valueOf(a),String.valueOf(b),String.valueOf(c),String.valueOf(d),String.valueOf(e)); :}
 ;
 
-sentencia::= sentif:a
-    {: pseudoG += "\n\t" + prt(String.valueOf(a)); :}
-    | switch:a
-    {: pseudoG += "\n\t" + prt(String.valueOf(a)); :}
+conntdos::=conntdos conr_r:a
+    {: tmp4 += String.valueOf(a);  RESULT = tmp4; :}
+    | conr_r:a
+    {: tmp4 += String.valueOf(a); RESULT = tmp4; :}    
 ;
 
-sentif::= SI TYPES:a OPRS:b TYPES:c ENTONCES contenido FINSI
-     {: pseudoG += cicloif(String.valueOf(a),String.valueOf(b),String.valueOf(c)); :}
+conr_r::= prints:a
+    {: RESULT = String.valueOf(a); :}
+    | coments:a
+    {: RESULT =  String.valueOf(a); :}
+    | basico:a
+    {: RESULT =  String.valueOf(a); :}
+    | sentencia:a
+    {: RESULT =  String.valueOf(a); :}
+    | ciclos:a
+    {: RESULT =  String.valueOf(a); :}
+
 ;
 
-contenido::=prints
-        | coments
-        | declaration
-        | asignation
-        | ciclos
+
+//CICLO WHILE
+ciclowhile::= MIENTRAS EXPWH:a ORCF:b EXPWH:c HACER conntennido:d FINMIENTRAS
+    {: RESULT = cicloWhile(String.valueOf(a),String.valueOf(b),String.valueOf(c),String.valueOf(d)); :}
 ;
 
 
+conntennido::=conntennido cont_r:a
+    {: tmp5 += String.valueOf(a);  RESULT = tmp5; :}
+    | cont_r:a
+    {: tmp5 += String.valueOf(a); RESULT = tmp5; :}    
+;
+
+cont_r::= prints:a
+    {: RESULT = String.valueOf(a); :}
+    | coments:a
+    {: RESULT =  String.valueOf(a); :}
+    | basico:a
+    {: RESULT =  String.valueOf(a); :}
+    | sentencia:a
+    {: RESULT =  String.valueOf(a); :}
+
+;
+
+
+
+//SENTENCIA SWITHC
+switch::= SEGUN TYP:a HACER swithces FINSEGUN
+    {:  RESULT += switche(String.valueOf(a),String.valueOf(tmp)); tmp = " "; :}
+;
+
+swithces::= casos 
+        | casos defolt
+;
+
+casos::= casos EXPSC:a ENTONCES opes:b
+        {:  String aux = String.valueOf(a);
+            String aux2 = aux.replace("¿", " ").replace("?"," ").replace("!", " ").replace("¡"," "); 
+            tmp += cases(String.valueOf(aux2),String.valueOf(b));   :}
+        | EXPSC:a ENTONCES opes:b
+        {:  String aux = String.valueOf(a);
+            String aux2 = aux.replace("¿", " ").replace("?"," ").replace("!", " ").replace("¡"," "); 
+            tmp += cases(String.valueOf(aux2),String.valueOf(b));    :}
+;
+
+defolt::= DELOCONTRARIO ENTONCES opes:a
+        {:   tmp += deflt(String.valueOf(a)); :}
+;
+
+//SENTENCIA IF
+sentif::= SI TYP:a OPRS:b TYP:c ENTONCES contenido:d FINSI
+        {: RESULT = cicloif(String.valueOf(a),String.valueOf(b),String.valueOf(c),String.valueOf(d)); :}
+        | SI TYP:a ENTONCES contenido:d FINSI
+        {: RESULT = cicloif2(String.valueOf(a),String.valueOf(d)); :}
+        | SI NOT PARABRE TYP:a PARCIERRA  ENTONCES contenido:d FINSI
+        {: RESULT = cicloif3(String.valueOf(a),String.valueOf(d));    :}
+        | SI NOT PARABRE TYP:a OPRS:b TYP:c PARCIERRA  ENTONCES contenido:d FINSI
+        {: RESULT = cicloif4(String.valueOf(a),String.valueOf(b),String.valueOf(c),String.valueOf(d));    :}
+;
+
+contenido::= opes:a
+        {: RESULT = (String.valueOf(a)); :}
+        | opes:a contrario osi
+        {: RESULT = concat(String.valueOf(a), String.valueOf(tmp), String.valueOf(tmp2)); tmp = " "; tmp2 = " "; :}
+        | opes:a osi contrario
+        {: RESULT = concat(String.valueOf(a), String.valueOf(tmp2), String.valueOf(tmp)); tmp = " "; tmp2 = " "; :}
+        | opes:a osi
+        {: RESULT = concat(String.valueOf(a), String.valueOf(tmp2), "null"); tmp2 = " ";  :}
+        | opes:a contrario
+        {: RESULT = concat(String.valueOf(a), String.valueOf(tmp), "null"); tmp = " ";  :}
+;
+
+contrario::= contrario  DELOCONTRARIO ENTONCES opes:a
+        {: tmp += elses(String.valueOf(a));   :}
+        | DELOCONTRARIO ENTONCES opes:a
+        {:  tmp += elses(String.valueOf(a));  :}
+;
+
+osi::= osi OSI TYP:a OPRS:b TYP:c ENTONCES opes:d
+    {: tmp2 += elsif(String.valueOf(a),String.valueOf(b),String.valueOf(c),String.valueOf(d)); :}
+    | OSI TYP:a OPRS:b TYP:c ENTONCES opes:d
+    {: tmp2 += elsif(String.valueOf(a),String.valueOf(b),String.valueOf(c),String.valueOf(d)); :}
+
+;
+
+opes::=opes ntocs:a
+    {: tmp3 += String.valueOf(a);  RESULT = tmp3; :}
+    | ntocs:a
+    {: tmp3 += String.valueOf(a); RESULT = tmp3; :}    
+;
+
+ntocs::= prints:a
+    {: RESULT = String.valueOf(a); :}
+    | coments:a
+    {: RESULT =  String.valueOf(a); :}
+    | basico:a
+    {: RESULT =  String.valueOf(a); :}
+    | sentencia:a
+    {: RESULT =  String.valueOf(a); :}
+    | ciclos:a
+    {: RESULT =  String.valueOf(a); :}
+
+;
 
 //OPERACION BASICA
 OPB ::= EXP:a
@@ -358,31 +716,68 @@ OPB ::= EXP:a
     {: RESULT = String.valueOf(String.valueOf(a) + String.valueOf(b) + String.valueOf(c)); :}  
     | ID:a signo:b ID:c
     {: RESULT = String.valueOf(String.valueOf(a) + String.valueOf(b) + String.valueOf(c)); :}
-    | ENTERO:a POT EXPPOT:c
+    | TYP:a POT EXPPOT:c
     {:  String aux = String.valueOf(c);
         String aux2 = aux.replace("[","(").replace("]",")");
         RESULT = pot1(String.valueOf(a), String.valueOf(aux2)); :}
-    | ENTERO:a POT EXPPOT:b MAS EXP:c
+    | TYP:a POT EXPPOT:b MAS EXP:c
     {:  String aux = String.valueOf(b);
         String aux2 = aux.replace("[","(").replace("]",")");
         RESULT = pot2(String.valueOf(a), String.valueOf(aux2), String.valueOf(c)); :}    
-    | PARABRE ENTERO:a POT EXPPOT:b PARCIERRA MAS EXP:c
+    | PARABRE TYP:a POT EXPPOT:b PARCIERRA MAS EXP:c
     {:  String aux = String.valueOf(b);
         String aux2 = aux.replace("[","(").replace("]",")");
-        RESULT = pot2(String.valueOf(a), String.valueOf(aux2), String.valueOf(c)); :}    
-    | FLOTANTE:a POT EXPPOT:b MAS EXP:c
-    {:  String aux = String.valueOf(b);
-        String aux2 = aux.replace("[","(").replace("]",")");
-        RESULT = pot2(String.valueOf(a), String.valueOf(aux2), String.valueOf(c)); :}    
-    | PARABRE FLOTANTE:a POT EXPPOT:b PARCIERRA MAS EXP:c
-    {:  String aux = String.valueOf(b);
-        String aux2 = aux.replace("[","(").replace("]",")");
-        RESULT = pot2(String.valueOf(a), String.valueOf(aux2), String.valueOf(c)); :}    
+        RESULT = pot2(String.valueOf(a), String.valueOf(aux2), String.valueOf(c)); :}        
     | EXP:a MOD EXP:c  
     {: RESULT = String.valueOf(String.valueOf(a) + " % " + String.valueOf(c)); :}  
 ;
 
-//SIGNOS
+//ASIGNACION```
+asignation::= A ASIGNAR ENTERO:a PYC
+    {: RESULT += aGeneral(String.valueOf(a),tmp); tmp = ""; :}
+    | A ASIGNAR FLOTANTE:a PYC
+    {: RESULT += aGeneral(String.valueOf(a),tmp); tmp = ""; :}
+    | A ASIGNAR CADENA:a PYC
+    {: RESULT += aGeneral(String.valueOf(a),tmp); tmp = ""; :}
+    | A ASIGNAR CARACTER:a PYC
+    {: RESULT += aGeneral(String.valueOf(a),tmp); tmp = ""; :}
+    | A ASIGNAR CHARACTER:a PYC
+    {: RESULT += aGeneral(String.valueOf(a),tmp); tmp = ""; :}
+    | A ASIGNAR EXPBOOL:a PYC
+    {: RESULT += aGeneral(String.valueOf(a),tmp); tmp = ""; :}
+    | A ASIGNAR EXPR:a PYC
+    {: RESULT += aGeneral(String.valueOf(a),tmp); tmp = ""; :}
+    | A ASIGNAR EXP:a PYC
+    {: RESULT += aGeneral(String.valueOf(a),tmp); tmp = ""; :}
+;
+
+//DECLARACION
+declaration::= 
+    INGRESAR V COMO TIPO CONVALOR ENTERO:a PYC
+        {: RESULT += dEnteros(null, String.valueOf(a),tmp); tmp = ""; :}
+    |INGRESAR V COMO TIPO CONVALOR MENOS:a ENTERO:b PYC
+        {: RESULT += dEnteros(String.valueOf(a),String.valueOf(b), tmp); tmp= ""; :}
+    |INGRESAR  V COMO TIPO CONVALOR FLOTANTE:a PYC
+        {: RESULT += dFlotantes(null, String.valueOf(a),tmp); tmp = ""; :} 
+    |INGRESAR V COMO TIPO CONVALOR MENOS:a FLOTANTE:b PYC
+        {: RESULT += dFlotantes(String.valueOf(a),String.valueOf(b),tmp); tmp = ""; :} 
+    |INGRESAR V COMO TIPO CONVALOR CADENA:a PYC
+        {: RESULT += dCadenas(String.valueOf(a),tmp); tmp = ""; :} 
+    |INGRESAR V COMO TIPO CONVALOR EXPBOOL:a PYC
+        {: RESULT += aGeneral(String.valueOf(a),tmp); tmp = ""; :}     
+    |INGRESAR V COMO TIPO CONVALOR CARACTER:a PYC
+        {: RESULT += dChars(String.valueOf(a),tmp); tmp = ""; :}
+    |INGRESAR V COMO TIPO CONVALOR CHARACTER:a PYC 
+        {:  String aux = String.valueOf(a);
+            String aux2 = aux.replace("'${", "(").replace("}'",")");
+            RESULT += dCharAscii(String.valueOf(aux2),tmp); tmp = ""; :}
+    |INGRESAR V COMO TIPO:a CONVALOR OPB:b PYC
+        {: RESULT += dOpracion(String.valueOf(a),String.valueOf(b),tmp); tmp = ""; :}
+    |INGRESAR V COMO TIPO:a CONVALOR OPR:b PYC
+        {: RESULT += dOpracion(String.valueOf(a),String.valueOf(b),tmp); tmp = ""; :}
+;
+
+//SIGNOS PARA OPERACIONES BASICAS
 signo::= MAS:a
     {: RESULT = String.valueOf(a); :}
     | MENOS:a
@@ -395,7 +790,16 @@ signo::= MAS:a
     {: RESULT = String.valueOf(a); :}
 ;
 
-//TIPOS DE DATOS
+//TIPOS DE DATOS PARA SENTENCIAS IF
+TYP::= ENTERO:a
+    {: RESULT = String.valueOf(a); :}
+    | FLOTANTE:a
+    {: RESULT = String.valueOf(a); :}
+    | ID:a
+    {: RESULT = String.valueOf(a); :}
+;
+
+//TIPOS DE DATOS OPERACIONES RELACIONALES
 TYPES::= ENTERO:a
     {: RESULT = String.valueOf(a); :}
     | FLOTANTE:a
@@ -406,8 +810,7 @@ TYPES::= ENTERO:a
     {: RESULT = String.valueOf(a); :}
 ;
 
-
-//TIPOS DE DATOS
+//TIPOS DE DATOS PARA IMPRIMIR
 type::= ID:a
     {: RESULT = String.valueOf(a); :}
     | CADENA:a
@@ -431,20 +834,43 @@ OPRS::= MAYOR:a
     {: RESULT = String.valueOf(a); :}
 ;
 
-
-
-//NOMBRES MULTIPLES
-A::= A COMA ID:a
-    {: pseudoG += ","+a; cont += 1; :}
-    | ID:a
-    {: pseudoG += "\t"+a; cont += 1; :}    
+//OPERADORES RELACIONALES Y COMPARADORES PARA SENTENCIAS IF
+ORCF::= MAYOR:a
+    {: RESULT = String.valueOf(a); :}
+    | MENOR:a
+    {: RESULT = String.valueOf(a); :}
+    | MAYOROIGUAL:a
+    {: RESULT = String.valueOf(a); :}
+    | MENOROIGUAL:a
+    {: RESULT = String.valueOf(a); :}
+    | ESIGUAL:a
+    {: RESULT = String.valueOf(a); :}
+    | ESDIFERENTE:a
+    {: RESULT = String.valueOf(a); :}
+    | AND:a
+    {: RESULT = String.valueOf(a); :}
+    | OR:a
+    {: RESULT = String.valueOf(a); :}
+    | NOT:a
+    {: RESULT = String.valueOf(a); :}
+    | PARABRE:a
+    {: RESULT = String.valueOf(a); :}
+    | PARCIERRA:a
+    {: RESULT = String.valueOf(a); :}
 ;
 
-//VARIABLES MULTIPLES
-V::= V COMA ID:a
-    {: pseudoG += ","+a; cont += 1; :}
+//NOMBRES MULTIPLES PRA ASIGNACIONES
+A::= A COMA ID:a
+    {: tmp += ","+a; cont += 1; :}
     | ID:a
-    {: pseudoG += "\t"+"var"+" "+a; cont += 1; :}    
+    {: tmp += "\n\t"+a; cont += 1; :}    
+;
+
+//VARIABLES MULTIPLES PARA DECLARACIONES
+V::= V COMA ID:a
+    {: tmp += ","+a; cont += 1; :}
+    | ID:a
+    {: tmp += "\n\t"+"var"+" "+a; cont += 1; :}    
 ;
 
 

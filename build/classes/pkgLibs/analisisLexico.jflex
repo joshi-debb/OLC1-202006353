@@ -1,5 +1,6 @@
 
 package pkgLibs;
+import pkgProject.*;
 import java_cup.runtime.*;
 import java.util.LinkedList;
 
@@ -7,6 +8,9 @@ import java.util.LinkedList;
 
 %{  
     public static LinkedList<Errors> LexicError = new LinkedList<Errors>();
+    public static boolean is_date = true;
+    public static String Error_List = "";
+
 %}
 
 %public 
@@ -25,12 +29,13 @@ import java.util.LinkedList;
 S = [+/*<>=!"-"]
 W = [a-zA-z]
 D = [0-9]
-
+C = ["¿""?""¡""!"]
 
 
 id = "_"{W}|({W}|{D})*"_"
 
 tipo = "numero"|"cadena"|"boolean"|"caracter"
+bool = "verdadero"|"falso"
 
 entero = {D}|{D}+
 flotante = {D}+"."{D}+
@@ -45,10 +50,12 @@ comentarios = "/*"[^\*]*"*/"
 
 simbolo = [ \t\r\n\f]
 
+exp_case = {C}({entero}|{flotante}|{cadena}|{caracter})+{C}
+
 exp_cc = ("(")({entero}|{flotante}|{S})+(")")
 exp_sc = ({entero}|{flotante}|{S})+
 
-exp_pot = "["({entero}|{flotante}|{S})+"]"
+exp_pot = "["({entero}|{flotante}|{S}|{id})+"]"
 exp = ({exp_cc}|{exp_sc})+
 
 type_cc = ("(")({entero}|{flotante}|{exp}|{id})+(")")
@@ -56,6 +63,8 @@ type_sc = ({entero}|{flotante}|{exp}|{id})+
 
 exp_r = ({type_cc}|{type_sc})+
 
+
+exp_wh = ({entero}|{flotante}|"i"|"k"|"j"|{id}|{S})+
 
 %%
 
@@ -81,15 +90,10 @@ exp_r = ({type_cc}|{type_sc})+
                     return new Symbol(sym.BOOLEAN, yycolumn+1, yyline+1, yytext());
                   }
 
- <YYINITIAL>"verdadero"   {
-                    System.out.println("tk_true, lexema:"+yytext());
-                    return new Symbol(sym.TRUE, yycolumn+1, yyline+1, yytext());
-                  }
-
-<YYINITIAL>"falso"   {
-                    System.out.println("tk_false, lexema:"+yytext());
-                    return new Symbol(sym.FALSE, yycolumn+1, yyline+1, yytext());
-                  }                 
+<YYINITIAL>{bool}   {
+                    System.out.println("tk_Bool, lexema:"+yytext());
+                    return new Symbol(sym.EXPBOOL, yycolumn+1, yyline+1, yytext());
+                  }               
 
 <YYINITIAL>{character}   {
                     System.out.println("tk_char, lexema:"+yytext());
@@ -443,6 +447,11 @@ exp_r = ({type_cc}|{type_sc})+
                     return new Symbol(sym.INTCIERRA, yycolumn+1, yyline+1, yytext());
                   }
 
+<YYINITIAL>{exp_case}   {
+                    System.out.println("tk_expSC, lexema:"+yytext());
+                    return new Symbol(sym.EXPSC, yycolumn+1, yyline+1, yytext());
+                  }
+
 <YYINITIAL>{exp}   {
                     System.out.println("tk_expresion, lexema:"+yytext());
                     return new Symbol(sym.EXP, yycolumn+1, yyline+1, yytext());
@@ -456,6 +465,11 @@ exp_r = ({type_cc}|{type_sc})+
 <YYINITIAL>{exp_r}   {
                     System.out.println("tk_expR, lexema:"+yytext());
                     return new Symbol(sym.EXPR, yycolumn+1, yyline+1, yytext());
+                  }
+
+<YYINITIAL>{exp_wh}   {
+                    System.out.println("tk_expWH, lexema:"+yytext());
+                    return new Symbol(sym.EXPWH, yycolumn+1, yyline+1, yytext());
                   }
 
 
@@ -475,8 +489,11 @@ exp_r = ({type_cc}|{type_sc})+
 
 <YYINITIAL>{simbolo}   { /* omitirlos */}
 
- . {
-        System.out.println("Error Lexico: "+yytext()+ " Linea: "+yyline+1+" Columna: "+yycolumn+1);
-        Errors datos = new Errors(yytext(), yyline+1, yycolumn+1, "Error Léxico", "Simbolo no existe en el lenguaje");
-        LexicError.add(datos);   
+.      {
+          Errors datos = new Errors(yytext(), yyline+1, yycolumn+1, "Error Léxico", "Simbolo no existe en el lenguaje");
+          LexicError.add(datos);   
+          String cadena = "<tr>"+"\n"+"<td>"+"Lexic_Error"+"</td>"+"<td>"+yytext()+"</td>"+"<td>"+(yyline + 1)+"</td>"+"<td>"+(yycolumn + 1)+"</td>"+"\n"+"</tr>"+"\n";
+          Error_List += cadena;
+
 }
+

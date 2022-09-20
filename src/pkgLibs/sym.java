@@ -8,79 +8,83 @@ package pkgLibs;
 /** CUP generated class containing symbol constants. */
 public class sym {
   /* terminals */
-  public static final int INGRESAR = 27;
-  public static final int COMENTARIOS = 64;
-  public static final int HASTAQUE = 45;
-  public static final int EXP = 70;
-  public static final int MAYOR = 16;
-  public static final int ESIGUAL = 20;
-  public static final int SI = 30;
-  public static final int CONVALOR = 29;
-  public static final int INICIO = 25;
-  public static final int POT = 15;
-  public static final int POR = 12;
-  public static final int METODO = 47;
-  public static final int DELOCONTRARIO = 32;
-  public static final int INTABRE = 61;
-  public static final int FINMETODO = 49;
-  public static final int FUNCION = 50;
-  public static final int CONPARAMETROS = 48;
-  public static final int ESDIFERENTE = 21;
-  public static final int FALSE = 67;
-  public static final int NOT = 24;
-  public static final int COMENTARIO = 63;
-  public static final int COMO = 28;
-  public static final int CONINCREMENTAL = 40;
+  public static final int INGRESAR = 28;
+  public static final int COMENTARIOS = 65;
+  public static final int HASTAQUE = 46;
+  public static final int EXP = 71;
+  public static final int MAYOR = 17;
+  public static final int ESIGUAL = 21;
+  public static final int SI = 31;
+  public static final int CONVALOR = 30;
+  public static final int INICIO = 26;
+  public static final int POT = 16;
+  public static final int POR = 13;
+  public static final int METODO = 48;
+  public static final int ORCF = 76;
+  public static final int DELOCONTRARIO = 33;
+  public static final int INTABRE = 62;
+  public static final int FINMETODO = 50;
+  public static final int FUNCION = 51;
+  public static final int CONPARAMETROS = 49;
+  public static final int ESDIFERENTE = 22;
+  public static final int FALSE = 68;
+  public static final int EXPWH = 11;
+  public static final int NOT = 25;
+  public static final int COMENTARIO = 64;
+  public static final int COMO = 29;
+  public static final int CONINCREMENTAL = 41;
   public static final int CHARACTER = 8;
-  public static final int HACER = 39;
-  public static final int PARA = 37;
-  public static final int MOD = 14;
-  public static final int FINSI = 34;
-  public static final int COMA = 55;
-  public static final int PARABRE = 59;
+  public static final int EXPBOOL = 74;
+  public static final int HACER = 40;
+  public static final int PARA = 38;
+  public static final int MOD = 15;
+  public static final int FINSI = 35;
+  public static final int COMA = 56;
+  public static final int PARABRE = 60;
   public static final int ENTERO = 3;
-  public static final int FINMIENTRAS = 43;
-  public static final int PARCIERRA = 60;
-  public static final int TRUE = 66;
-  public static final int FINSEGUN = 36;
+  public static final int FINMIENTRAS = 44;
+  public static final int PARCIERRA = 61;
+  public static final int TRUE = 67;
+  public static final int FINSEGUN = 37;
   public static final int TIPO = 2;
   public static final int BOOLEAN = 6;
-  public static final int MENOROIGUAL = 19;
-  public static final int FIN = 26;
-  public static final int IMPRIMIR = 53;
-  public static final int HASTA = 38;
-  public static final int IMPRIMIRNL = 54;
-  public static final int SIMBOLO = 65;
-  public static final int DIV = 13;
-  public static final int EXPPOT = 71;
-  public static final int MAYOROIGUAL = 18;
-  public static final int MENOS = 11;
-  public static final int MENOR = 17;
+  public static final int MENOROIGUAL = 20;
+  public static final int FIN = 27;
+  public static final int IMPRIMIR = 54;
+  public static final int HASTA = 39;
+  public static final int IMPRIMIRNL = 55;
+  public static final int SIMBOLO = 66;
+  public static final int DIV = 14;
+  public static final int EXPPOT = 72;
+  public static final int MAYOROIGUAL = 19;
+  public static final int MENOS = 12;
+  public static final int MENOR = 18;
   public static final int MAS = 10;
-  public static final int EXPR = 72;
+  public static final int EXPR = 73;
   public static final int EOF = 0;
-  public static final int MIENTRAS = 42;
-  public static final int PUNTO = 56;
-  public static final int OSI = 33;
-  public static final int FINPARA = 41;
-  public static final int PYC = 57;
+  public static final int MIENTRAS = 43;
+  public static final int PUNTO = 57;
+  public static final int OSI = 34;
+  public static final int FINPARA = 42;
+  public static final int PYC = 58;
   public static final int CARACTER = 7;
-  public static final int SEGUN = 35;
-  public static final int OR = 22;
+  public static final int SEGUN = 36;
+  public static final int OR = 23;
   public static final int error = 1;
-  public static final int EJECUTAR = 52;
+  public static final int EJECUTAR = 53;
   public static final int ID = 9;
-  public static final int ENTONCES = 31;
+  public static final int ENTONCES = 32;
   public static final int FLOTANTE = 4;
-  public static final int RETORNAR = 46;
+  public static final int RETORNAR = 47;
   public static final int CADENA = 5;
-  public static final int CORABRE = 68;
-  public static final int INTCIERRA = 62;
-  public static final int CORCIERRA = 69;
-  public static final int AND = 23;
-  public static final int FINFUNCION = 51;
-  public static final int ASIGNAR = 58;
-  public static final int REPETIR = 44;
+  public static final int CORABRE = 69;
+  public static final int INTCIERRA = 63;
+  public static final int CORCIERRA = 70;
+  public static final int AND = 24;
+  public static final int FINFUNCION = 52;
+  public static final int EXPSC = 75;
+  public static final int ASIGNAR = 59;
+  public static final int REPETIR = 45;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -93,6 +97,7 @@ public class sym {
   "CHARACTER",
   "ID",
   "MAS",
+  "EXPWH",
   "MENOS",
   "POR",
   "DIV",
@@ -154,7 +159,10 @@ public class sym {
   "CORCIERRA",
   "EXP",
   "EXPPOT",
-  "EXPR"
+  "EXPR",
+  "EXPBOOL",
+  "EXPSC",
+  "ORCF"
   };
 }
 
