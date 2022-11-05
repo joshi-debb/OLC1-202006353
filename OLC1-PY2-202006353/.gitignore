@@ -3,6 +3,3 @@
 node_modules
 .vscode
 
-# Quasar core related directories
-.quasar
-/dist
