@@ -1,3 +1,5 @@
+
+
 export class Salida {
   private static instance: Salida;
   lista: String[];

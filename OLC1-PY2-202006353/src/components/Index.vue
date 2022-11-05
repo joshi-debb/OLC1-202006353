@@ -106,13 +106,9 @@ var text = "";
       lector.onload = function(e) {
         var contenido = e.target.result;
           text = contenido;
-          console.log(text);
-
       };
       lector.readAsText(archivo);
- 
    };
-
    window.addEventListener('load',() => {document.getElementById('lectura').addEventListener('change',leerArchivo)})
 
 
@@ -120,11 +116,11 @@ import { codemirror } from "vue-codemirror";
 import "codemirror/lib/codemirror.css";
 import "codemirror/theme/paraiso-light.css";
 import "codemirror/mode/javascript/javascript.js";
-import AnalizadorTraduccion from "../analizador/gramatica";
+import AnalizerTraduccion from "../Analizer/gramatica";
 
 import { Ejecucion } from "../ejecucion/ejecucion";
-import { Errores } from "../arbol/errores";
-import { Error as InstanciaError } from "../arbol/error";
+import { Errores } from "../AST/errores";
+import { Error as InstanciaError } from "../AST/error";
 import { Entornos } from "../ejecucion/entornos";
 
 export default {
@@ -195,7 +191,7 @@ export default {
       }
       this.inicializarValores();
       try {
-        const raiz = AnalizadorTraduccion.parse(this.code);
+        const raiz = AnalizerTraduccion.parse(this.code);
         //Validacion de raiz
         if (raiz == null) {
           this.notificar(
@@ -231,6 +227,7 @@ export default {
       this.entornos = [];
       this.salida = [];
       this.dot = '';
+      text = '';
     },
 
     validarError(error) {

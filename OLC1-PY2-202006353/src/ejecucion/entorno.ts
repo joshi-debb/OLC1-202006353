@@ -2,7 +2,6 @@ import { Funcion } from './funcion';
 import { Type } from './type';
 import { Variable } from './variable';
 import * as _ from 'lodash';
-import { EntornoAux } from './entorno_aux';
 
 export class Entorno {
   variables: Map<String, Variable>;

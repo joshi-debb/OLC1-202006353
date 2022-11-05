@@ -1,5 +1,5 @@
-import { Error } from "../../../arbol/error";
-import { Errores } from "../../../arbol/errores";
+import { Error } from "../../../AST/error";
+import { Errores } from "../../../AST/errores";
 import { Arreglo } from "../../arreglo";
 import { Entorno } from "../../entorno";
 import { Instruccion } from "../../instruccion";

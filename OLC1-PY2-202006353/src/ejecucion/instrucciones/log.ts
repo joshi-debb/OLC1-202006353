@@ -1,4 +1,4 @@
-import { Salida } from "../../arbol/salida";
+import { Salida } from "../../AST/salida";
 import { Entorno } from "../entorno";
 import { Instruccion } from "../instruccion";
 import * as _ from 'lodash';
